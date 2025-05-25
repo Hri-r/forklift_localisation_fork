@@ -10,7 +10,7 @@ class CalibrationNode(Node):
         self.calibrated_imu_pub = self.create_publisher(Imu, '/calibrated_imu', 10)
 
         # Load calibration from YAML
-        self.load_calibration_from_yaml('/home/monisha/turtlebot3_ws/src/my_aruco_detector/my_aruco_detector/calibration.yaml')
+        self.load_calibration_from_yaml('~/turtlebot3_ws/src/my_aruco_detector/my_aruco_detector/calibration.yaml')
 
         # Subscribe to raw IMU
         self.create_subscription(Imu, '/imu', self.imu_callback, 10)

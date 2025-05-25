@@ -6,52 +6,66 @@ from nav_msgs.msg import Odometry
 from gazebo_msgs.srv import SetEntityState
 from gazebo_msgs.msg import EntityState
 from geometry_msgs.msg import Pose, Quaternion
+from rclpy.qos import qos_profile_sensor_data
 from tf_transformations import euler_from_quaternion
 import math
 
 class CameraFollower(Node):
     def __init__(self):
         super().__init__('camera_follower')
-        self.sub = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
+        
+        self.subscription = self.create_subscription(
+            Odometry,
+            '/odom',
+            self.odom_callback,
+            qos_profile_sensor_data
+        )
         self.cli = self.create_client(SetEntityState, '/set_entity_state')
         while not self.cli.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('Waiting for /set_entity_state service...')
-        self.initialized = False
+        
+        self.latest_odom = None
+        self.timer = self.create_timer(0.001, self.update_camera_pose)  # 10 Hz
 
     def odom_callback(self, msg):
-        if not self.initialized:
-            self.get_logger().info('Received initial pose, starting camera tracking...')
-            self.initialized = True
+        self.latest_odom = msg
 
-        if self.initialized:
-            state = EntityState()
-            state.name = 'camera'  # Gazebo camera model name (update if different)
-            
-            # Get robot position from /odom message
-            robot_position = msg.pose.pose.position
-            robot_orientation = msg.pose.pose.orientation
-            
-            # Extract yaw from robot's orientation (quaternion to Euler)
-            _, _, yaw = euler_from_quaternion(
-                [robot_orientation.x, robot_orientation.y, robot_orientation.z, robot_orientation.w]
-            )
-            
-            # create camera pose
-            state.pose = Pose()
-            state.pose.position.x = msg.pose.pose.position.x + 0.045
-            state.pose.position.y = msg.pose.pose.position.y   # Offset towards the back 
-            state.pose.position.z = msg.pose.pose.position.z + 0.105 # Elevated
+    def update_camera_pose(self):
+        if self.latest_odom is None:
+            return
 
-            # set camera orientation to match robot's yaw
-            quaternion = self.yaw_to_quaternion(yaw)
-            state.pose.orientation = quaternion
+        msg = self.latest_odom
+        robot_pos = msg.pose.pose.position
+        robot_ori = msg.pose.pose.orientation
 
-            req = SetEntityState.Request()
-            req.state = state
-            self.cli.call_async(req)
-            
+        # Extract yaw from quaternion
+        _, _, yaw = euler_from_quaternion([
+            robot_ori.x, robot_ori.y, robot_ori.z, robot_ori.w
+        ])
+
+        # Compute camera pose
+        camera_pose = Pose()
+
+        off_length = 0.055
+
+        offset_z = 0.105         # height above robot
+
+        camera_pose.position.x = robot_pos.x + off_length*math.cos(yaw)
+        camera_pose.position.y = robot_pos.y + off_length*math.sin(yaw)
+        camera_pose.position.z = robot_pos.z + offset_z
+
+        # Match orientation
+        camera_pose.orientation = self.yaw_to_quaternion(yaw)
+
+        state = EntityState()
+        state.name = 'camera'
+        state.pose = camera_pose
+
+        req = SetEntityState.Request()
+        req.state = state
+        self.cli.call_async(req)
+
     def yaw_to_quaternion(self, yaw):
-        """Convert yaw to quaternion."""
         q = Quaternion()
         q.x = 0.0
         q.y = 0.0
@@ -68,4 +82,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-

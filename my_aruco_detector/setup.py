@@ -14,6 +14,8 @@ setup(
         ('share/' + package_name + '/launch', ['launch/localisation_bayes_prefuckup.launch.py']),
         ('share/' + package_name + '/launch', ['launch/trial.launch.py']),
         ('share/' + package_name + '/' + package_name, ['my_aruco_detector/aruco_marker_map.yaml']),
+        ('share/ament_index/resource_index/packages',['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

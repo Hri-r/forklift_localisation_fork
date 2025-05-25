@@ -1,12 +1,13 @@
-<?xml version="1.0" ?><sdf version="1.6">
-  <model name="aruco_marker_1">
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="Marker1">
     <static>true</static>
     <link name="link">
       <visual name="visual">
         <geometry>
           <mesh>
             <uri>model://aruco_marker_1/meshes/aruco_marker_1.dae</uri>
-          <scale>0.22 0.22 0.22</scale></mesh>
+          </mesh>
         </geometry>
       </visual>
     </link>

@@ -1,0 +1,13 @@
+markers:
+  4:
+    position: [0.644199, 0., 0.04]
+    orientation: [0.0, 0.0, 0.0, 1.0]  # Quaternion [x, y, z, w]
+  1:
+    position: [0, 0.6, 0.04]
+    orientation: [0.0, 0.0, 0.7071, 0.7071]
+  2:
+    position: [-0.794328, 0, 0.04]
+    orientation: [0, 0, 1, 0]
+  3:
+    position: [0, -0.846156, 0.04]
+    orientation: [0.0, 0.0, -0.7071, 0.7071]
