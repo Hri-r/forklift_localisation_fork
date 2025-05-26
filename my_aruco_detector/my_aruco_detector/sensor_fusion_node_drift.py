@@ -24,7 +24,7 @@ class SensorFusionNode(Node):
 
         # Subscriptions
         self.create_subscription(Imu, '/imu', self.imu_callback, 10)
-        self.create_subscription(PoseStamped, '/robot_pose', self.marker_callback, 10)
+        self.create_subscription(PoseStamped, '/marker_pose', self.marker_callback, 10)
 
         # Timer for prediction loop
         self.timer = self.create_timer(0.05, self.update_state)  # 20 Hz

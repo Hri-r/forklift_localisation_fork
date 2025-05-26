@@ -25,7 +25,7 @@ class ForkliftDisplay(Node):
             [1.8, 0.7, "Dock"]
         ]
 
-        self.create_subscription(PoseStamped, '/robot_pose', self.robot_callback, 10)
+        self.create_subscription(PoseStamped, '/fused_pose', self.robot_callback, 10)
         self.create_subscription(PoseStamped, '/goal_pose', self.goal_callback, 10)
 
         pygame.init()

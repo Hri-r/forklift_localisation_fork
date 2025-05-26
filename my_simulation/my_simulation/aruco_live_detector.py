@@ -101,10 +101,10 @@ class ArucoDetector(Node):
                         continue
 
                     # Pose estimation
-                    R_mc, _ = cv2.Rodrigues(rvec)
-                    T_mc = np.eye(4)
-                    T_mc[:3, :3] = R_mc
-                    T_mc[:3, 3] = tvec.flatten()
+                    R_cm, _ = cv2.Rodrigues(rvec)
+                    T_cm = np.eye(4)
+                    T_cm[:3, :3] = R_cm
+                    T_cm[:3, 3] = tvec.flatten()
 
                     # OpenCV to Gazebo transform
                     T_cv_to_gazebo = np.array([
@@ -122,7 +122,15 @@ class ArucoDetector(Node):
                     T_wm[:3, 3] = marker_pos
 
                     # Camera pose in world frame
-                    T_wc = T_wm @ T_cv_to_gazebo @ np.linalg.inv(T_mc)
+                    T_wc = T_wm @ np.linalg.inv(T_cv_to_gazebo @ T_cm @ np.linalg.inv(T_cv_to_gazebo))
+
+                    ### the following is a fix for camera orientation being turned 180 degrees about the z-axis
+                    ### please do note that there's probably a better way to do this, but this works for now
+                    R_fix = transforms3d.euler.euler2mat(0, 0, np.pi)
+                    T_fix = np.eye(4)
+                    T_fix[:3, :3] = R_fix
+
+                    T_wc = T_wc @ T_fix 
 
                     # Extract position and quaternion
                     camera_pos = T_wc[:3, 3]
