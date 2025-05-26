@@ -19,7 +19,7 @@ class SensorFusionNode(Node):
         self.v = 0.0  # velocity estimate
 
         # Fusion weight (0=marker only, 1=IMU only)
-        self.alpha = 0.1
+        self.alpha = 0
         self.pose_pub = self.create_publisher(PoseStamped, '/fused_pose', 10)
 
         # Subscriptions
