@@ -3,6 +3,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
+from launch.actions import SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch.actions import ExecuteProcess
@@ -28,23 +29,13 @@ def generate_launch_description():
         # 'sim_world_mod.world'
         'world1'
     )
-
-    # delete_burger = ExecuteProcess(
-    #     cmd=['ros2', 'service', 'call', '/delete_entity', 'gazebo_msgs/srv/DeleteEntity',
-    #          '{"name": "burger"}'],
-    #     output='screen',
-    #     # Only wait briefly as the service might not be immediately available
-    #     emulate_tty=True
-    # )
-
-    # delete_camera = ExecuteProcess(
-    #     cmd=['ros2', 'service', 'call', '/delete_entity', 'gazebo_msgs/srv/DeleteEntity',
-    #          '{"name": "camera"}'],
-    #     output='screen',
-    #     # Only wait briefly as the service might not be immediately available
-    #     emulate_tty=True
-    # )
     
+    set_gazebo_model_path = SetEnvironmentVariable(
+    name='GAZEBO_MODEL_PATH',
+    value=os.path.join(pkg_share, 'models')
+    )
+
+
     gzserver_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
@@ -107,6 +98,7 @@ def generate_launch_description():
     # Add the commands to the launch description
     # ld.add_action(delete_burger)
     # ld.add_action(delete_camera)
+    ld.add_action(set_gazebo_model_path)
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
     ld.add_action(robot_state_publisher_cmd)

@@ -13,7 +13,7 @@
       </attenuation>
       <direction>-0.5 0.1 -0.9</direction>
       <spot>
-        <inner_angle>0</inner_angle>==
+        <inner_angle>0</inner_angle>
         <outer_angle>0</outer_angle>
         <falloff>0</falloff>
       </spot>
@@ -326,7 +326,7 @@
         </link>
       </model>
 
-      <model name='Marker1'>
+      <model name='Marker5'>
         <pose>0 0.6 0.04 0 -0 1.57</pose>
         <scale>0.25 0.25 0.25</scale>
         <link name='link'>
@@ -653,13 +653,13 @@
       <pose>0.644199 0 0.04 0 -0 0</pose>
     </model>
 
-    <model name='Marker1'>
+    <model name='Marker5'>
       <static>1</static>
       <link name='link'>
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://marker1/meshes/Marker1.dae</uri>
+              <uri>model://aruco_marker_5/meshes/aruco_marker_5.dae</uri>
               <scale>0.25 0.25 0.25</scale>
             </mesh>
           </geometry>
