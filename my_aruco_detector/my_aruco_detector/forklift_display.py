@@ -36,7 +36,7 @@ class ForkliftDisplay(Node):
     def robot_callback(self, msg):
         self.forklift_pos = [msg.pose.position.x, msg.pose.position.y]
 
-        self.get_logger().info(f"Robot position: {self.forklift_pos}")
+        # self.get_logger().info(f"Robot position: {self.forklift_pos}")
 
         if not self.path_history or self.forklift_pos != list(self.path_history[-1]):
             self.path_history.append(tuple(self.forklift_pos))

@@ -44,6 +44,7 @@ endif()
 install(PROGRAMS
   my_simulation/camera_follower_node.py
   my_simulation/aruco_live_detector.py
+  my_simulation/controller.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -25,7 +25,7 @@ class MarkerDetector(Node):
         
         # Static transform from camera to robot (camera in front of robot)
         self.T_cam_to_robot = np.eye(4)
-        self.T_cam_to_robot[0, 3] = 0.055  # 10 cm behind camera, adjust as needed
+        self.T_cam_to_robot[0, 3] = -0.055  # 10 cm behind camera, adjust as needed
         self.T_cam_to_robot[2, 3] = -0.105
 
 

@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'camera_follower_node = my_simulation.camera_follower_node:main',
             'aruco_live_detector = my_simulation.aruco_live_detector:main',
+            'controller = my_simulation.controller:main',
         ],
     },
 )
